@@ -27,6 +27,10 @@ public class RequestMapping {
     }
 
     public Controller findController(String url) {
+        int index = url.indexOf("?");
+        if( index != -1) {
+            url = url.substring(0, index);
+        }
         return mappings.get(url);
     }
 

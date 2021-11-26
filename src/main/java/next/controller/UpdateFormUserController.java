@@ -25,6 +25,6 @@ public class UpdateFormUserController implements Controller {
         }
 
         req.setAttribute("user", user);
-        return "/user/update.jsp";
+        return "/user/updateForm.jsp";
     }
 }
