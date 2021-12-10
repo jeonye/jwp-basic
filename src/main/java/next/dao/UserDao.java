@@ -11,13 +11,11 @@ public class UserDao {
     public void insert(User user) throws SQLException {
         JdbcTemplate template = new JdbcTemplate() {
             @Override
-            PreparedStatement setValues(PreparedStatement pstmt) throws SQLException {
+            void setValues(PreparedStatement pstmt) throws SQLException {
                 pstmt.setString(1, user.getUserId());
                 pstmt.setString(2, user.getPassword());
                 pstmt.setString(3, user.getName());
                 pstmt.setString(4, user.getEmail());
-
-                return pstmt;
             }
         };
 
@@ -29,13 +27,11 @@ public class UserDao {
     public void update(User user) throws SQLException {
         JdbcTemplate template = new JdbcTemplate() {
             @Override
-            PreparedStatement setValues(PreparedStatement pstmt) throws SQLException {
+            void setValues(PreparedStatement pstmt) throws SQLException {
                 pstmt.setString(1, user.getPassword());
                 pstmt.setString(2, user.getName());
                 pstmt.setString(3, user.getEmail());
                 pstmt.setString(4, user.getUserId());
-
-                return pstmt;
             }
         };
 
