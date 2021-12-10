@@ -64,6 +64,10 @@ public class UserDao {
         return userList;
     }
 
+    List<User> convertObjectToUserList(Object object) {
+        return (List<User>) object;
+    }
+
     public User findByUserId(String userId) throws SQLException {
         SelectOneJdbcTemplate template = new SelectOneJdbcTemplate();
         User user = template.findByUserId(userId, this);
@@ -88,5 +92,9 @@ public class UserDao {
         }
 
         return user;
+    }
+
+    User convertObjectToUser(Object object) {
+        return (User) object;
     }
 }

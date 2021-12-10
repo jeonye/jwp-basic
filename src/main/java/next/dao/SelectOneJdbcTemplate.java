@@ -19,10 +19,9 @@ public class SelectOneJdbcTemplate {
             pstmt = con.prepareStatement(userDao.createQueryForSelectOne());
             userDao.setValuesForSelectOne(userId, pstmt);
             rs = pstmt.executeQuery();
+            Object result = userDao.mapRowForSelectOne(rs);
 
-            User user = (User) userDao.mapRowForSelectOne(rs);
-
-            return user;
+            return userDao.convertObjectToUser(result);
         } finally {
             if (rs != null) {
                 rs.close();

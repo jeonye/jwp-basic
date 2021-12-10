@@ -20,9 +20,9 @@ public class SelectAllJdbcTemplate {
             con = ConnectionManager.getConnection();
             pstmt = con.prepareStatement(userDao.createQueryForSelectAll());
             rs = pstmt.executeQuery();
-            List<User> userList = (List<User>) userDao.mapRowForSelectAll(rs);
+            Object result = userDao.mapRowForSelectAll(rs);
 
-            return userList;
+            return userDao.convertObjectToUserList(result);
 
         } finally {
             if (rs != null) {
