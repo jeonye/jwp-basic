@@ -47,18 +47,9 @@ public class UserDao {
         ResultSet rs = null;
         try {
             con = ConnectionManager.getConnection();
-            String sql = "SELECT userId, password, name, email FROM USERS ORDER BY userId";
-            pstmt = con.prepareStatement(sql);
+            pstmt = con.prepareStatement(createQueryForSelectAll());
             rs = pstmt.executeQuery();
-
-            List<User> userList = new ArrayList<User>();
-            User user = null;
-
-            if (rs.next()) {
-                user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
-                        rs.getString("email"));
-                userList.add(user);
-            }
+            List<User> userList = (List<User>) mapRowForSelectAll(rs);
 
             return userList;
 
@@ -75,23 +66,34 @@ public class UserDao {
         }
     }
 
+    String createQueryForSelectAll() {
+        return "SELECT userId, password, name, email FROM USERS ORDER BY userId";
+    }
+
+    Object mapRowForSelectAll(ResultSet rs) throws SQLException {
+        List<User> userList = new ArrayList<User>();
+        User user = null;
+
+        if (rs.next()) {
+            user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
+                    rs.getString("email"));
+            userList.add(user);
+        }
+
+        return userList;
+    }
+
     public User findByUserId(String userId) throws SQLException {
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
             con = ConnectionManager.getConnection();
-            String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-            pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, userId);
-
+            pstmt = con.prepareStatement(createQueryForSelectOne());
+            setValuesForSelectOne(userId, pstmt);
             rs = pstmt.executeQuery();
 
-            User user = null;
-            if (rs.next()) {
-                user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
-                        rs.getString("email"));
-            }
+            User user = (User) mapRowForSelectOne(rs);
 
             return user;
         } finally {
@@ -105,5 +107,24 @@ public class UserDao {
                 con.close();
             }
         }
+    }
+
+    String createQueryForSelectOne() {
+        return "SELECT userId, password, name, email FROM USERS WHERE userid=?";
+    }
+
+    void setValuesForSelectOne(String userId, PreparedStatement pstmt) throws SQLException {
+        pstmt.setString(1, userId);
+    }
+
+    Object mapRowForSelectOne(ResultSet rs) throws SQLException {
+        User user = null;
+
+        if (rs.next()) {
+            user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
+                    rs.getString("email"));
+        }
+
+        return user;
     }
 }
