@@ -48,16 +48,10 @@ public class UserDao {
 
             @Override
             Object mapRow(ResultSet rs) throws SQLException {
-                List<User> userList = new ArrayList<User>();
-                User user = null;
-
-                if (rs.next()) {
-                    user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
+                User user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
                             rs.getString("email"));
-                    userList.add(user);
-                }
 
-                return userList;
+                return user;
             }
         };
 
@@ -77,12 +71,8 @@ public class UserDao {
 
             @Override
             Object mapRow(ResultSet rs) throws SQLException {
-                User user = null;
-
-                if (rs.next()) {
-                    user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
-                            rs.getString("email"));
-                }
+                User user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
+                        rs.getString("email"));
 
                 return user;
             }

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SelectJdbcTemplate {
@@ -19,9 +20,14 @@ public abstract class SelectJdbcTemplate {
             pstmt = con.prepareStatement(sql);
             setValues(pstmt);
             rs = pstmt.executeQuery();
-            Object result = mapRow(rs);
 
-            return (List) result;
+            List<Object> resultList = new ArrayList<Object>();
+
+            if(rs.next()) {
+                resultList.add(mapRow(rs));
+            }
+
+            return resultList;
 
         } finally {
             if (rs != null) {
