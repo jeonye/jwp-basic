@@ -15,18 +15,6 @@ public class CreateUserController implements Controller {
 
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        if("POST".equals(req.getMethod())) {
-            return doPost(req);
-        } else {
-            return doGet();
-        }
-    }
-
-    private String doGet() throws Exception {
-        return "/user/form.jsp";
-    }
-
-    private String doPost(HttpServletRequest req) throws Exception {
         User user = new User(req.getParameter("userId"), req.getParameter("password"), req.getParameter("name"),
                 req.getParameter("email"));
         log.debug("User : {}", user);
@@ -35,4 +23,5 @@ public class CreateUserController implements Controller {
 
         return "redirect:/";
     }
+
 }

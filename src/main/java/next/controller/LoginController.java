@@ -12,18 +12,6 @@ public class LoginController implements Controller {
 
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        if("POST".equals(req.getMethod())) {
-            return doPost(req);
-        } else {
-            return doGet();
-        }
-    }
-
-    private String doGet() throws Exception {
-        return "/user/login.jsp";
-    }
-
-    private String doPost(HttpServletRequest req) throws Exception {
         String userId = req.getParameter("userId");
         String password = req.getParameter("password");
         User user = DataBase.findUserById(userId);
@@ -41,5 +29,4 @@ public class LoginController implements Controller {
             return "/user/login.jsp";
         }
     }
-
 }
