@@ -8,54 +8,40 @@ import core.jdbc.ConnectionManager;
 import next.model.User;
 
 public class UserDao {
-
     public void insert(User user) throws SQLException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        try {
-            con = ConnectionManager.getConnection();
-            String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
-            pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, user.getUserId());
-            pstmt.setString(2, user.getPassword());
-            pstmt.setString(3, user.getName());
-            pstmt.setString(4, user.getEmail());
+        JdbcTemplate template = new JdbcTemplate() {
+            @Override
+            PreparedStatement setValues(PreparedStatement pstmt) throws SQLException {
+                pstmt.setString(1, user.getUserId());
+                pstmt.setString(2, user.getPassword());
+                pstmt.setString(3, user.getName());
+                pstmt.setString(4, user.getEmail());
 
-            pstmt.executeUpdate();
-        } finally {
-            if (pstmt != null) {
-                pstmt.close();
+                return pstmt;
             }
+        };
 
-            if (con != null) {
-                con.close();
-            }
-        }
+        String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
+
+        template.update(sql);
     }
 
     public void update(User user) throws SQLException {
-        // TODO 구현 필요함.
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        try {
-            con = ConnectionManager.getConnection();
-            String sql = "UPDATE USERS SET password = ?, name = ?, email = ? WHERE userId = ?";
-            pstmt = con.prepareStatement(sql);
-            pstmt.setString(1, user.getPassword());
-            pstmt.setString(2, user.getName());
-            pstmt.setString(3, user.getEmail());
-            pstmt.setString(4, user.getUserId());
+        JdbcTemplate template = new JdbcTemplate() {
+            @Override
+            PreparedStatement setValues(PreparedStatement pstmt) throws SQLException {
+                pstmt.setString(1, user.getPassword());
+                pstmt.setString(2, user.getName());
+                pstmt.setString(3, user.getEmail());
+                pstmt.setString(4, user.getUserId());
 
-            pstmt.executeUpdate();
+                return pstmt;
+            }
+        };
 
-        } finally {
-            if (pstmt != null) {
-                pstmt.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        }
+        String sql = "UPDATE USERS SET password = ?, name = ?, email = ? WHERE userId = ?";
+
+        template.update(sql);
     }
 
     public List<User> findAll() throws SQLException {
