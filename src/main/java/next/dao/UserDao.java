@@ -4,7 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import core.jdbc.ConnectionManager;
 import next.model.User;
 
 public class UserDao {
@@ -41,60 +40,59 @@ public class UserDao {
     }
 
     public List<User> findAll() throws SQLException {
-        SelectAllJdbcTemplate template = new SelectAllJdbcTemplate();
-        List<User> userList = template.findAll(this);
+        SelectJdbcTemplate template = new SelectJdbcTemplate() {
+            @Override
+            void setValues(PreparedStatement pstmt) throws SQLException {
+
+            }
+
+            @Override
+            Object mapRow(ResultSet rs) throws SQLException {
+                List<User> userList = new ArrayList<User>();
+                User user = null;
+
+                if (rs.next()) {
+                    user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
+                            rs.getString("email"));
+                    userList.add(user);
+                }
+
+                return userList;
+            }
+        };
+
+        String sql = "SELECT userId, password, name, email FROM USERS ORDER BY userId";
+
+        List<User> userList = (List<User>) template.query(sql);
 
         return userList;
-    }
-
-    String createQueryForSelectAll() {
-        return "SELECT userId, password, name, email FROM USERS ORDER BY userId";
-    }
-
-    Object mapRowForSelectAll(ResultSet rs) throws SQLException {
-        List<User> userList = new ArrayList<User>();
-        User user = null;
-
-        if (rs.next()) {
-            user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
-                    rs.getString("email"));
-            userList.add(user);
-        }
-
-        return userList;
-    }
-
-    List<User> convertObjectToUserList(Object object) {
-        return (List<User>) object;
     }
 
     public User findByUserId(String userId) throws SQLException {
-        SelectOneJdbcTemplate template = new SelectOneJdbcTemplate();
-        User user = template.findByUserId(userId, this);
+        SelectJdbcTemplate template = new SelectJdbcTemplate() {
+            @Override
+            void setValues(PreparedStatement pstmt) throws SQLException {
+                pstmt.setString(1, userId);
+            }
+
+            @Override
+            Object mapRow(ResultSet rs) throws SQLException {
+                User user = null;
+
+                if (rs.next()) {
+                    user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
+                            rs.getString("email"));
+                }
+
+                return user;
+            }
+        };
+
+        String sql = "SELECT userId, password, name, email FROM USERS WHERE userid=?";
+
+        User user = (User) template.queryForObject(sql);
 
         return user;
     }
 
-    String createQueryForSelectOne() {
-        return "SELECT userId, password, name, email FROM USERS WHERE userid=?";
-    }
-
-    void setValuesForSelectOne(String userId, PreparedStatement pstmt) throws SQLException {
-        pstmt.setString(1, userId);
-    }
-
-    Object mapRowForSelectOne(ResultSet rs) throws SQLException {
-        User user = null;
-
-        if (rs.next()) {
-            user = new User(rs.getString("userId"), rs.getString("password"), rs.getString("name"),
-                    rs.getString("email"));
-        }
-
-        return user;
-    }
-
-    User convertObjectToUser(Object object) {
-        return (User) object;
-    }
 }
