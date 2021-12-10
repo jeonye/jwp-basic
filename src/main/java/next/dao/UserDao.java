@@ -41,29 +41,10 @@ public class UserDao {
     }
 
     public List<User> findAll() throws SQLException {
-        // TODO 구현 필요함.
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            con = ConnectionManager.getConnection();
-            pstmt = con.prepareStatement(createQueryForSelectAll());
-            rs = pstmt.executeQuery();
-            List<User> userList = (List<User>) mapRowForSelectAll(rs);
+        SelectAllJdbcTemplate template = new SelectAllJdbcTemplate();
+        List<User> userList = template.findAll(this);
 
-            return userList;
-
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (pstmt != null) {
-                pstmt.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        }
+        return userList;
     }
 
     String createQueryForSelectAll() {
@@ -84,29 +65,10 @@ public class UserDao {
     }
 
     public User findByUserId(String userId) throws SQLException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        try {
-            con = ConnectionManager.getConnection();
-            pstmt = con.prepareStatement(createQueryForSelectOne());
-            setValuesForSelectOne(userId, pstmt);
-            rs = pstmt.executeQuery();
+        SelectOneJdbcTemplate template = new SelectOneJdbcTemplate();
+        User user = template.findByUserId(userId, this);
 
-            User user = (User) mapRowForSelectOne(rs);
-
-            return user;
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (pstmt != null) {
-                pstmt.close();
-            }
-            if (con != null) {
-                con.close();
-            }
-        }
+        return user;
     }
 
     String createQueryForSelectOne() {
