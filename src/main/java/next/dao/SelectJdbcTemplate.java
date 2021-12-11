@@ -43,7 +43,13 @@ public abstract class SelectJdbcTemplate {
     }
 
     public Object queryForObject(String sql) throws SQLException {
-        return query(sql).get(0);
+        List result = query(sql);
+
+        if(result.isEmpty()) {
+            return null;
+        }
+
+        return result.get(0);
     }
 
     abstract void setValues(PreparedStatement pstmt) throws SQLException;
