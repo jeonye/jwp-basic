@@ -3,6 +3,7 @@ package next.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import core.exception.DataAccessException;
 import core.mvc.Controller;
 import next.dao.UserDao;
 import next.model.User;
@@ -28,7 +29,7 @@ public class ListUserController implements Controller {
 
         try {
             userList = userDao.findAll();
-        } catch (SQLException e) {
+        } catch (DataAccessException e) {
             log.error(e.getMessage());
         }
 
