@@ -26,6 +26,9 @@ public class RequestMapping {
         // Q&A
         mappings.put("/questions/show", new ShowQuestionController());
         mappings.put("/questions/createQuestion", new CreateQuestionController());
+        mappings.put("/questions/updateFormQuestion", new UpdateFormQuestionController());
+        mappings.put("/questions/updateQuestion", new UpdateQuestionController());
+        mappings.put("/questions/deleteQuestion", new DeleteQuestionController());
 
         logger.info("Initialized Request Mapping!");
     }

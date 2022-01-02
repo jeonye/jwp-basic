@@ -80,7 +80,7 @@ public class Question {
         this.writer = updateQuestion.writer;
         this.title = updateQuestion.title;
         this.contents = updateQuestion.contents;
-        this.countOfAnswer = updateQuestion.countOfAnswer;
+        this.createdDate = updateQuestion.createdDate;
     }
 
     @Override

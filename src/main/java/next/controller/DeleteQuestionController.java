@@ -6,14 +6,12 @@ import next.dao.QuestionDao;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class ShowQuestionController implements Controller {
+public class DeleteQuestionController implements Controller {
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-
         long questionId = Long.parseLong(req.getParameter("questionId"));
         QuestionDao questionDao = new QuestionDao();
-        req.setAttribute("question", questionDao.findByQuestionId(questionId));
-
-        return "/qna/show.jsp";
+        questionDao.delete(questionId);
+        return "redirect:/";
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class QuestionDaoTest {
@@ -26,25 +27,30 @@ public class QuestionDaoTest {
         // Insert, Select
         Question expected = new Question(9000, "writer", "title", "contents", null, 0);
 
-        QuestionDao qnaDao = new QuestionDao();
-        qnaDao.insert(expected);
-        Question actual = qnaDao.findByQuestionId(expected.getQuestionId());
+        QuestionDao questionDao = new QuestionDao();
+        questionDao.insert(expected);
+        Question actual = questionDao.findByQuestionId(expected.getQuestionId());
         assertTrue(expected.equals(actual));
 
         // Update, Select
-        expected.update(new Question(9000, "writer", "title", "contents", null, 2));
-        qnaDao.update(expected);
-        actual = qnaDao.findByQuestionId(expected.getQuestionId());
+        expected.update(new Question(9000, "writer", "title", "contents", LocalDateTime.now().toString(), 0));
+        questionDao.update(expected);
+        actual = questionDao.findByQuestionId(expected.getQuestionId());
         assertTrue(expected.equals(actual));
+
+        // Delete
+        questionDao.delete(expected.getQuestionId());
+        actual = questionDao.findByQuestionId(expected.getQuestionId());
+        assertEquals(null, actual);
     }
 
     @Test
     public void findMaxQuestionId() {
-        Long questionId = 9100L;
+        long questionId = 9100L;
         Question expected = new Question(questionId, "writer", "title", "contents", null, 0);
         QuestionDao questionDao = new QuestionDao();
         questionDao.insert(expected);
-        Long maxQuestionId = questionDao.findMaxQuestionId();
+        long maxQuestionId = questionDao.findMaxQuestionId();
         assertEquals(questionId, maxQuestionId);
     }
 

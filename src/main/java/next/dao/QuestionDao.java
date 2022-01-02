@@ -24,11 +24,17 @@ public class QuestionDao {
 
     public void update(Question question) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String sql = "UPDATE QUESTIONS set writer = ?, title = ?, contents = ?, countOfAnswer = ?";
-        jdbcTemplate.update(sql, question.getWriter(), question.getTitle(), question.getContents(), question.getCountOfAnswer());
+        String sql = "UPDATE QUESTIONS set writer = ?, title = ?, contents = ?, createdDate = ? WHERE questionId = ?";
+        jdbcTemplate.update(sql, question.getWriter(), question.getTitle(), question.getContents(), question.getCreatedDate(), question.getQuestionId());
     }
 
-    public Question findByQuestionId(Long questionId) {
+    public void delete(long questionId) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "DELETE FROM QUESTIONS WHERE questionId = ?";
+        jdbcTemplate.update(sql, questionId);
+    }
+
+    public Question findByQuestionId(long questionId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
         // Question 데이터 조회
@@ -45,25 +51,27 @@ public class QuestionDao {
 
         Question question = jdbcTemplate.queryForObject(sql, questionRowMapper, questionId);
 
-        log.debug("[QnA] Selected Question ID : {}", question.getQuestionId());
+        if(question != null) {
+            log.debug("[QnA] Selected Question ID : {}", question.getQuestionId());
 
-        // Question에 대한 Answer 조회
-        sql = "SELECT answerId, writer, contents, createdDate, questionId FROM ANSWERS WHERE questionId = ?";
+            // Question에 대한 Answer 조회
+            sql = "SELECT answerId, writer, contents, createdDate, questionId FROM ANSWERS WHERE questionId = ?";
 
-        RowMapper<Answer> answerRowMapper = new RowMapper<Answer>() {
-            @Override
-            public Answer mapRow(ResultSet rs) throws SQLException {
-                return new Answer(rs.getLong("answerId"), rs.getString("writer"),
-                        rs.getString("contents"), rs.getString("createdDate"),
-                        rs.getLong("questionId"));
-            }
-        };
+            RowMapper<Answer> answerRowMapper = new RowMapper<Answer>() {
+                @Override
+                public Answer mapRow(ResultSet rs) throws SQLException {
+                    return new Answer(rs.getLong("answerId"), rs.getString("writer"),
+                            rs.getString("contents"), rs.getString("createdDate"),
+                            rs.getLong("questionId"));
+                }
+            };
 
-        List<Answer> answerList = jdbcTemplate.query(sql, answerRowMapper, questionId);
+            List<Answer> answerList = jdbcTemplate.query(sql, answerRowMapper, questionId);
 
-        log.debug("[QnA] Selected Answer Count : {}", answerList.size());
+            log.debug("[QnA] Selected Answer Count : {}", answerList.size());
 
-        question.setAnswerList(answerList);
+            question.setAnswerList(answerList);
+        }
 
         return question;
     }
