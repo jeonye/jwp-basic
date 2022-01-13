@@ -59,4 +59,37 @@ public class Answer {
     public void setQuestionId(long questionId) {
         this.questionId = questionId;
     }
+
+    public void update(Answer updateAnswer) {
+        this.writer = updateAnswer.writer;
+        this.contents = updateAnswer.contents;
+        this.createdDate = updateAnswer.createdDate;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+
+        Answer other = (Answer) obj;
+        if(answerId != other.answerId)
+            return false;
+        if(writer == null) {
+            if(other.writer != null)
+                return false;
+        } else if(!writer.equals(other.writer))
+            return false;
+        if(contents == null) {
+            if(other.contents != null)
+                return false;
+        } else if(!contents.equals(other.contents))
+            return false;
+        if(questionId != other.questionId)
+            return false;
+        return true;
+    }
 }
