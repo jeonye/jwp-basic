@@ -10,6 +10,8 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import core.jdbc.ConnectionManager;
 
+import static org.junit.Assert.assertEquals;
+
 public class AnswerDaoTest {
     @Before
     public void setup() {
@@ -25,5 +27,16 @@ public class AnswerDaoTest {
         AnswerDao dut = new AnswerDao();
         Answer answer = dut.insert(expected);
         System.out.println("Answer : " + answer);
+    }
+
+    @Test
+    public void deleteAnswer() throws Exception {
+        long questionId = 1L;
+        Answer expected = new Answer("javajigi", "answer contents", questionId);
+        AnswerDao dut = new AnswerDao();
+        Answer answer = dut.insert(expected);
+
+        dut.delete(answer.getAnswerId());
+        assertEquals(null, dut.findById(answer.getAnswerId()));
     }
 }
