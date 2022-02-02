@@ -3,6 +3,7 @@ package next.controller.qna;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import next.constants.QuestionConstants;
 import next.dao.QuestionDao;
 import next.model.Question;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class AddAnswerController extends AbstractController {
         Answer savedAnswer = answerDao.insert(answer);
 
         // 답변 수 증가
-        Question question = questionDao.updateOnCountOfAnswer(Long.parseLong(req.getParameter("questionId")));
+        Question question = questionDao.updateOnCountOfAnswer(Long.parseLong(req.getParameter("questionId")), QuestionConstants.ADD_ANSWER);
 
         return jsonView().addObject("answer", savedAnswer).addObject("question", question);
     }

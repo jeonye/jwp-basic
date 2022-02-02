@@ -36,9 +36,18 @@ public class QuestionDao {
         return findById(keyHolder.getId());
     }
 
-    public Question updateOnCountOfAnswer(long questionId) {
+    public Question updateOnCountOfAnswer(long questionId, int type) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
-        String sql = "UPDATE QUESTIONS SET countOfAnswer = (countOfAnswer + 1) WHERE questionId = ?";
+        StringBuffer sqlSb = new StringBuffer();
+        sqlSb.append("UPDATE QUESTIONS SET countOfAnswer = ");
+        if(type == 0) { // 등록
+            sqlSb.append("(countOfAnswer + 1) ");
+        } else {    // 삭제
+            sqlSb.append("(countOfAnswer - 1) ");
+        }
+        sqlSb.append("WHERE questionId = ?");
+
+        String sql = sqlSb.toString();
         jdbcTemplate.update(sql, questionId);
 
         return findById(questionId);
