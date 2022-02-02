@@ -4,11 +4,13 @@ import core.mvc.AbstractController;
 import core.mvc.ModelAndView;
 import next.dao.QuestionDao;
 import next.model.Question;
+import next.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class AddQuestionController extends AbstractController {
 
@@ -17,7 +19,10 @@ public class AddQuestionController extends AbstractController {
 
     @Override
     public ModelAndView execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Question question = new Question(request.getParameter("writer"),
+        HttpSession session = request.getSession();
+        User loginedUser = (User) session.getAttribute("user");
+
+        Question question = new Question(loginedUser.getName(),
                 request.getParameter("title"), request.getParameter("contents"));
         log.debug("question : {}", question);
 
