@@ -35,6 +35,14 @@ public class QuestionDao {
         jdbcTemplate.update(psc, keyHolder);
         return findById(keyHolder.getId());
     }
+
+    public Question updateOnCountOfAnswer(long questionId) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "UPDATE QUESTIONS SET countOfAnswer = (countOfAnswer + 1) WHERE questionId = ?";
+        jdbcTemplate.update(sql, questionId);
+
+        return findById(questionId);
+    }
     
     public List<Question> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();

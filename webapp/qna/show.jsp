@@ -53,7 +53,7 @@
 
 				<div class="qna-comment">
 					<div class="qna-comment-slipp">
-						<p class="qna-comment-count"><strong>${question.countOfComment}</strong>개의 의견</p>
+						<p class="qna-comment-count" id="countOfComment"><strong>${question.countOfComment}</strong>개의 의견</p>
 						<div class="qna-comment-slipp-articles">
 							<c:forEach items="${answers}" var="answer">
 								<article class="article">
@@ -72,7 +72,7 @@
 									<div class="article-util">
 										<ul class="article-util-list">
 											<li>
-												<a class="link-modify-article" href="/api/qna/updateAnswer?answerId=5">수정</a>
+												<a class="link-modify-article" href="/api/qna/updateAnswer?answerId=${answer.answerId}">수정</a>
 											</li>
 											<li>
 												<form class="form-delete" action="/api/qna/deleteAnswer" method="POST">
