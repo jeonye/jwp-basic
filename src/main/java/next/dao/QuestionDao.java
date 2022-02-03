@@ -15,7 +15,7 @@ import next.model.Question;
 
 public class QuestionDao {
     public Question insert(Question question) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
         String sql = "INSERT INTO QUESTIONS " + 
                 "(writer, title, contents, createdDate) " + 
                 " VALUES (?, ?, ?, ?)";
@@ -37,13 +37,13 @@ public class QuestionDao {
     }
 
     public void update(Question question) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
         String sql = "UPDATE QUESTIONS SET title = ?, contents = ? WHERE questionId = ?";
         jdbcTemplate.update(sql, question.getTitle(), question.getContents(), question.getQuestionId());
     }
 
     public Question updateOnCountOfAnswer(long questionId, int type) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
         StringBuffer sqlSb = new StringBuffer();
         sqlSb.append("UPDATE QUESTIONS SET countOfAnswer = ");
         if(type == 0) { // 등록
@@ -60,7 +60,7 @@ public class QuestionDao {
     }
     
     public List<Question> findAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
         String sql = "SELECT questionId, writer, title, createdDate, countOfAnswer FROM QUESTIONS "
                 + "order by questionId desc";
 
@@ -77,7 +77,7 @@ public class QuestionDao {
     }
 
     public Question findById(long questionId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
         String sql = "SELECT questionId, writer, title, contents, createdDate, countOfAnswer FROM QUESTIONS "
                 + "WHERE questionId = ?";
 
