@@ -40,12 +40,14 @@
 									<a class="link-modify-article" href="/qna/updateForm?questionId=${question.questionId}">수정</a>
 								</li>
 							</c:if>
-							<li>
-								<form class="form-delete" action="#" method="POST">
-									<input type="hidden" name="_method" value="DELETE">
-									<button class="link-delete-article" type="submit">삭제</button>
-								</form>
-							</li>
+							<c:if test="${canDelete}">
+								<li>
+									<form class="form-delete" action="#" method="POST">
+										<input type="hidden" name="_method" value="DELETE">
+										<button class="link-delete-article" type="submit">삭제</button>
+									</form>
+								</li>
+							</c:if>
 							<li>
 								<a class="link-modify-article" href="/">목록</a>
 							</li>

@@ -36,10 +36,38 @@ public class ShowController extends AbstractController {
             isOwner = true;
         }
 
+        // 질문 삭제 여부 확인
+        // 조건1 : 답변이 없는 경우
+        boolean canDelete = false;
+        if(answers.size() == 0) {
+            canDelete = true;
+        }
+
+        // 조건2 : 질문자와 답변자가 같은 경우
+        String answerWriter = null;
+        boolean isOneAnswerWriter = false;
+
+        for(int i=0; i<answers.size(); i++) {
+            Answer answer = answers.get(i);
+            if(i == 0) {
+                answerWriter = answer.getWriter();
+                isOneAnswerWriter = true;
+            } else if(!answerWriter.equals(answer.getWriter())) {
+                // 여러명이 답변을 단 경우 Stop
+                isOneAnswerWriter = false;
+                break;
+            }
+        }
+
+        if(isOneAnswerWriter && question.getWriter().equals(answerWriter)) {
+            canDelete = true;
+        }
+
         ModelAndView mav = jspView("/qna/show.jsp");
         mav.addObject("question", question);
         mav.addObject("answers", answers);
         mav.addObject("isOwner", isOwner);
+        mav.addObject("canDelete", canDelete);
         return mav;
     }
 }
