@@ -36,6 +36,12 @@ public class QuestionDao {
         return findById(keyHolder.getId());
     }
 
+    public void update(Question question) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate();
+        String sql = "UPDATE QUESTIONS SET title = ?, contents = ? WHERE questionId = ?";
+        jdbcTemplate.update(sql, question.getTitle(), question.getContents(), question.getQuestionId());
+    }
+
     public Question updateOnCountOfAnswer(long questionId, int type) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         StringBuffer sqlSb = new StringBuffer();

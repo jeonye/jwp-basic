@@ -15,6 +15,10 @@ public class Question {
 
     private int countOfComment;
 
+    public Question(long questionId, String title, String contents) {
+        this(questionId, null, title, contents, new Date(), 0);
+    }
+
     public Question(String writer, String title, String contents) {
         this(0, writer, title, contents, new Date(), 0);
     }

@@ -35,9 +35,11 @@
 					</div>
 					<div class="article-util">
 						<ul class="article-util-list">
-							<li>
-								<a class="link-modify-article" href="#">수정</a>
-							</li>
+							<c:if test="${isOwner}">
+								<li>
+									<a class="link-modify-article" href="/qna/updateForm?questionId=${question.questionId}">수정</a>
+								</li>
+							</c:if>
 							<li>
 								<form class="form-delete" action="#" method="POST">
 									<input type="hidden" name="_method" value="DELETE">
