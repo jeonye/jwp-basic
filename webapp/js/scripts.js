@@ -36,7 +36,7 @@ function deleteAnswer(e) {
   e.preventDefault();
 
   var article = $(this);
-  var queryString = $("form[name=deleteAnswer]").serialize();
+  var queryString = article.closest('form').serialize();
 
   $.ajax({
     type : 'post',
