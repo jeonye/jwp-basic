@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import next.constants.QuestionConstants;
 import next.dao.AnswerDao;
 import next.dao.QuestionDao;
 import next.model.Answer;
@@ -35,6 +36,7 @@ public class ShowController extends AbstractController {
         mav.addObject("answers", answers);
         mav.addObject("isOwner", isOwner(req));
         mav.addObject("canDelete", canDelete());
+        mav.addObject("isMobile", isMobile(req));
         return mav;
     }
 
@@ -80,5 +82,14 @@ public class ShowController extends AbstractController {
         }
 
         return canDelete;
+    }
+
+    private boolean isMobile(HttpServletRequest req) {
+        String userAgent = req.getHeader("User-Agent").toUpperCase();
+        if(userAgent.indexOf(QuestionConstants.IS_MOBILE) > -1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -42,7 +42,14 @@
 							</c:if>
 							<c:if test="${canDelete}">
 								<li>
-									<form class="form-delete" action="/qna/deleteQuestion?questionId=${question.questionId}" method="POST">
+									<c:choose>
+										<c:when test="${isMobile}">
+											<form class="form-delete" action="/mobil/qna/deleteQuestion?questionId=${question.questionId}" method="POST">
+										</c:when>
+										<c:otherwise>
+											<form class="form-delete" action="/qna/deleteQuestion?questionId=${question.questionId}" method="POST">
+										</c:otherwise>
+									</c:choose>
 										<input type="hidden" name="_method" value="DELETE">
 										<button class="link-delete-article" type="submit">삭제</button>
 									</form>
