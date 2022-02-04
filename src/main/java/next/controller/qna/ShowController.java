@@ -30,6 +30,15 @@ public class ShowController extends AbstractController {
         question = questionDao.findById(questionId);
         answers = answerDao.findAllByQuestionId(questionId);
 
+        ModelAndView mav = jspView("/qna/show.jsp");
+        mav.addObject("question", question);
+        mav.addObject("answers", answers);
+        mav.addObject("isOwner", isOwner(req));
+        mav.addObject("canDelete", canDelete());
+        return mav;
+    }
+
+    private boolean isOwner(HttpServletRequest req) {
         // 글쓴이와 로그인 유저가 동일한지 확인
         HttpSession session = req.getSession();
         User loginedUser = (User) session.getAttribute("user");
@@ -39,6 +48,10 @@ public class ShowController extends AbstractController {
             isOwner = true;
         }
 
+        return isOwner;
+    }
+
+    private boolean canDelete() {
         // 질문 삭제 여부 확인
         // 조건1 : 답변이 없는 경우
         boolean canDelete = false;
@@ -66,11 +79,6 @@ public class ShowController extends AbstractController {
             canDelete = true;
         }
 
-        ModelAndView mav = jspView("/qna/show.jsp");
-        mav.addObject("question", question);
-        mav.addObject("answers", answers);
-        mav.addObject("isOwner", isOwner);
-        mav.addObject("canDelete", canDelete);
-        return mav;
+        return canDelete;
     }
 }
