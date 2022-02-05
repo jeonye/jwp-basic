@@ -9,12 +9,15 @@ import java.util.List;
 
 public class JdbcTemplate {
 
-    private static JdbcTemplate instance = new JdbcTemplate();
+    private static JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     private JdbcTemplate() {}
 
     public static JdbcTemplate getInstance() {
-        return instance;
+        if(jdbcTemplate == null) {
+            jdbcTemplate = new JdbcTemplate();
+        }
+        return jdbcTemplate;
     }
 
     public void update(String sql, PreparedStatementSetter pss) throws DataAccessException {
