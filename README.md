@@ -13,8 +13,19 @@
 * HttpServletRequest에 설정한 데이터(질문 목록)가 home.jsp에 바인딩되어 화면에 출력된다.
 
 #### 7. next.web.qna package의 ShowController는 멀티 쓰레드 상황에서 문제가 발생하는 이유에 대해 설명하라.
-* Dao 인스턴스가 전역변수로 선언되어 있다.
-* Dao 인스턴스가 생성되면서 Heap 메모리에 데이터 저장 공간이 할당된다.
-* execute() 메소드가 실행될때마다 해당 공간의 주소값이 반환된다.
-* 여러 스레드는 동일한 주소값으로 처리를 진행한다.
-* Dao는 트랜젝션 객체이기 때문에, 동일한 공간에서 처리를 진행할 경우 트랜젝션이 이상동작 할 수 있다.
+* ShowController는 프로젝트 초기화 과정에서 인스턴스를 생성한다.
+* 해당 인스턴스는 이후 여러 요청에서 사용된다.(싱글톤)
+* ShowController에는 Model 객체가 전역변수로 선언되어 있다.
+~~~ java
+public class ShowController extends AbstractController {
+    private Question question;
+    private List<Answer> answers;
+}
+~~~
+* 전역변수로 선언된 Model 객체를 ShowController에서 참조한다.
+* 여러 스레드가 execute() 메소드를 실행시킨만큼 Model 인스턴스가 생성된다.
+* ShowController 1 : 多 Model 인스턴스인 상황이 발생한다.
+* 여러개의 Model 인스턴스 중 ShowController가 참조하는 Model 인스턴스는 1개이다.
+* 따라서, 요청 내용과는 다른 Model 정보가 반환될 수 있다.
+
+이를 해결하기 위해서는 스레드별로 인스턴스를 생성하도록 전역변수로 선언된 Model 객체를 지역변수로 변경해야한다.

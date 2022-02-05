@@ -16,31 +16,26 @@ import core.mvc.ModelAndView;
 import next.model.User;
 
 public class ShowController extends AbstractController {
-    private QuestionDao questionDao;
-    private AnswerDao answerDao;
-    private Question question;
-    private List<Answer> answers;
+    private QuestionDao questionDao = new QuestionDao();
+    private AnswerDao answerDao = new AnswerDao();
 
     @Override
     public ModelAndView execute(HttpServletRequest req, HttpServletResponse response) throws Exception {
-        answerDao = new AnswerDao();
-        questionDao = new QuestionDao();
-
         Long questionId = Long.parseLong(req.getParameter("questionId"));
 
-        question = questionDao.findById(questionId);
-        answers = answerDao.findAllByQuestionId(questionId);
+        Question question = questionDao.findById(questionId);
+        List<Answer> answers = answerDao.findAllByQuestionId(questionId);
 
         ModelAndView mav = jspView("/qna/show.jsp");
         mav.addObject("question", question);
         mav.addObject("answers", answers);
-        mav.addObject("isOwner", isOwner(req));
-        mav.addObject("canDelete", canDelete());
+        mav.addObject("isOwner", isOwner(req, question));
+        mav.addObject("canDelete", canDelete(question, answers));
         mav.addObject("isMobile", isMobile(req));
         return mav;
     }
 
-    private boolean isOwner(HttpServletRequest req) {
+    private boolean isOwner(HttpServletRequest req, Question question) {
         // 글쓴이와 로그인 유저가 동일한지 확인
         HttpSession session = req.getSession();
         User loginedUser = (User) session.getAttribute("user");
@@ -53,7 +48,7 @@ public class ShowController extends AbstractController {
         return isOwner;
     }
 
-    private boolean canDelete() {
+    private boolean canDelete(Question question, List<Answer> answers) {
         // 질문 삭제 여부 확인
         // 조건1 : 답변이 없는 경우
         boolean canDelete = false;
