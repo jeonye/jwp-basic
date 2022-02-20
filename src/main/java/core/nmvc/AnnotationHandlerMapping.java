@@ -7,13 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.common.collect.Maps;
 
+import core.annotation.HandlerMapping;
 import core.annotation.RequestMapping;
 import core.annotation.RequestMethod;
 import org.reflections.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AnnotationHandlerMapping {
+public class AnnotationHandlerMapping implements HandlerMapping {
 
     private Logger logger = LoggerFactory.getLogger(AnnotationHandlerMapping.class);
     private Object[] basePackage;

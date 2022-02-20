@@ -1,0 +1,47 @@
+package next.controller;
+
+import core.annotation.Controller;
+import core.annotation.RequestMapping;
+import core.annotation.RequestMethod;
+import core.mvc.ModelAndView;
+import core.nmvc.AbstractNewController;
+import next.dao.UserDao;
+import next.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+@Controller
+public class LoginController extends AbstractNewController {
+    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
+    private UserDao userDao = UserDao.getInstance();
+
+    @RequestMapping(value = "/users/login", method = RequestMethod.POST)
+    public ModelAndView login(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String userId = request.getParameter("userId");
+        String password = request.getParameter("password");
+        User user = userDao.findByUserId(userId);
+
+        if (user == null) {
+            throw new NullPointerException("사용자를 찾을 수 없습니다.");
+        }
+
+        if (user.matchPassword(password)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+            return jspView("redirect:/");
+        } else {
+            throw new IllegalStateException("비밀번호가 틀립니다.");
+        }
+    }
+
+    @RequestMapping("/users/logout")
+    public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HttpSession session = request.getSession();
+        session.removeAttribute("user");
+        return jspView("redirect:/qna/list");
+    }
+}
